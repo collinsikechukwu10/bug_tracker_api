@@ -6,6 +6,12 @@ __pycache__/
 # C extensions
 *.so
 
+#custom
+_media/
+*.log
+*.sqlite3
+*/migrations
+.idea/
 # Distribution / packaging
 .Python
 build/
