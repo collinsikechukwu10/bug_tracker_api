@@ -1,0 +1,6 @@
+Django~=3.2.5
+pandas~=1.1.5
+pydantic~=1.7.3
+djangorestframework~=3.12.4
+coreapi
+drf-yasg
