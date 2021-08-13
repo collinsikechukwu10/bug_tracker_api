@@ -1,0 +1,39 @@
+{% extends '__layout/base.html' %}
+{% load static %}
+{% block main_content %}
+    <main>
+        <section class="projects">
+            <div class="projects-header">
+                <div class="empty"></div>
+                <div class="projects-search"><i class="far fa-search"></i><input type="text"/></div>
+                <div class="add-projects">
+                    <div class="btn">+ Add Project</div>
+                </div>
+            </div>
+            <div class="projects-body">
+                {% for project in projects %}
+                    <div class="project" href="{% url 'bugtracker_projecttaskdashboard' pk=project.id %}">
+                        <div class="project-banner"></div>
+                        <div class="project-body">
+                            <div class="project-name">{{ project.name }}</div>
+                            <div class="project-details">
+                                <div class="bug-status">
+                                    {% for status,count in project.get_task_count.items %}
+                                        <div class="status">
+                                            <small>{{ status|capfirst }}</small>
+                                            <p>{{ count }}</p>
+                                        </div>
+                                    {% endfor %}
+                                </div>
+                                <span class="created">Created on: {{ project.created_on }}</span>
+                                <span class="updated">Updated: {{ project.last_updated }} hours ago</span>
+                            </div>
+                        </div>
+                    </div>
+                {% empty %}
+                    No projects found
+                {% endfor %}
+            </div>
+        </section>
+    </main>
+{% endblock %}

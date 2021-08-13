@@ -30,8 +30,8 @@ def add_api_documentation_urls():
 
 
 urlpatterns = [path('admin/', admin.site.urls),
-               # path("auth/", include("core.urls.web")),
+               path("auth/", include("core.urls.web")),
                path("api/auth/", include("core.urls.api")),
-               # path("bugtracker/", include("bugTracker.urls.web")),
+               path("bugtracker/", include("bugTracker.urls.web")),
                path("api/bugtracker/", include("bugTracker.urls.api")),
                ] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT) + add_api_documentation_urls()

@@ -19,7 +19,7 @@ class Project(models.Model):
     apple_app_store_link = models.URLField(max_length=300, null=True)
 
     def last_updated(self):
-        return int((dt.datetime.now(self.updated_on.tzinfo) - self.updated_on).seconds / (60*60))
+        return int((dt.datetime.now(self.updated_on.tzinfo) - self.updated_on).seconds / (60 * 60))
 
     def get_task_count(self):
         status_dict = list(self.tasks.values("status").annotate(count=Count("status")))
@@ -28,6 +28,9 @@ class Project(models.Model):
             if i not in status_count_dict:
                 status_count_dict[i] = 0
         return status_count_dict
+
+    def get_project_members(self):
+        return self.members.values("id", "first_name", "last_name", "membership__name")
 
 
 class ProjectSettings(models.Model):

@@ -18,8 +18,9 @@ class RegisterForm(UserCreationForm):
 
 
 class LoginForm(AuthenticationForm):
-    username = forms.EmailField(label='Username', widget=forms.EmailInput(attrs={'autocomplete': 'true'}))
+    username = forms.EmailField(label='Username', initial="", widget=forms.EmailInput(attrs={'autocomplete': 'true'}))
     password = forms.CharField(min_length=6,
                                label=_("Password"),
-                               strip=False,
+                               strip=False, initial="",
                                widget=forms.PasswordInput(attrs={'autocomplete': 'current-password'}))
+    remember_me = forms.BooleanField(initial=True, required=False)

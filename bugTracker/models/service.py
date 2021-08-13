@@ -16,7 +16,6 @@ class ServiceMixin:
     @classmethod
     def get_instance(cls):
         if cls._instance is None:
-            print(cls.__name__)
             cls._instance = cls()
         return cls._instance
 
@@ -38,6 +37,9 @@ class ProjectService(ModelServiceMixin):
         num_projects = self._model.objects.count()
         projects = self._model.objects.order_by("-created_on")[:min(num_projects, num)]
         return self._serializer(projects, many=True).data if (serialize and self.has_serializer) else projects
+
+    def get_project_members(self, pk):
+        return self.get_project(pk, False).get_project_members()
 
     def get_all_projects(self, serialize: bool = True):
         projects = self._model.objects.all().order_by("-created_on")

@@ -1,0 +1,66 @@
+<!-- MODALS -->
+<div id="modal" class="modal" v-if="modalDisplayed" v-cloak>
+    <div id="add-task-modal" class="modal-item task-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="save" @click="addNewTask">Save</div>
+                <div class="modal-actions">
+                    <label class="modal-options"><i class="far fa-ellipsis-h"></i></label>
+                    <span @click="modals.task = false" class="close-modal"><i class="far fa-times"></i></span>
+                </div>
+            </div>
+            <div class="modal-body">
+                <form class="modal-form">
+                    <div class="title-text">
+                        <vue-editable v-model="currentTask.title" v-html="'&nbsp;'"/>
+                    </div>
+
+                    <div class="steps">
+                        <h4>Steps To Reproduce</h4>
+                        <ul>
+                            <li v-for="step in currentTask.checklists">
+                                <vue-editable v-model="step.text" v-html="'&nbsp;'"/>
+                            </li>
+                        </ul>
+                        <div class="add-checklist-item" @click="createNewChecklist"><i
+                                class="far fa-plus"></i><span>Add A Step</span>
+                        </div>
+                    </div>
+                </form>
+                <div class="filters">
+                    <!-- <small>Assignee</small> -->
+
+                    <vue-select
+                            default-text="Severity"
+                            icon="fa-tachometer-alt"
+                            :values="[{name: 'Critical', value: 'critical'}, {name: 'Important', value: 'important'},{name: 'Normal', value: 'normal'},{name:
+                  'Minor', value: 'minor'},]"
+                            v-model="currentTask.severity"
+                    ></vue-select>
+
+                    <vue-select default-text="Backlog" icon="fa-file-medical-alt"></vue-select>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="limit-successful-modal" class="modal-item mini-modal" style="display: none">
+        <div class="modal-content">
+            <div class="modal-header"></div>
+            <form class="modal-body">
+                <i class="far fa-check"></i>
+                <p>You have successfully updated the transaction limit on your SLIPCARD</p>
+                <div class="btn">Ok</div>
+            </form>
+        </div>
+    </div>
+    <div id="password-change-successful-modal" class="modal-item mini-modal" style="display: none">
+        <div class="modal-content">
+            <div class="modal-header"></div>
+            <form class="modal-body">
+                <i class="far fa-check"></i>
+                <p>User’s password has been reset and they have been sent an email to create new password</p>
+                <div class="btn">Ok</div>
+            </form>
+        </div>
+    </div>
+</div>

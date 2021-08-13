@@ -1,0 +1,40 @@
+{% load static %}
+{% if request.user.is_authenticated %}
+    <header>
+        <div class="logo"><span>Sankore</span><span>Bug</span><span>Tracker</span></div>
+        <nav class="team-menu">
+            <ul class="team-menu-list">
+                <li class="team-menu-list-item" href="{% url 'bugtracker_projectdashboard' %}">Dashboard</li>
+                <li class="team-menu-list-item" href="{% url 'bugtracker_projectdashboard' %}">Project</li>
+                <li class="team-menu-list-item">Team</li>
+                <li class="team-menu-list-item">Settings</li>
+            </ul>
+        </nav>
+        <nav class="user-menu">
+            <ul class="user-menu-list">
+                <li class="user-menu-list-item">
+                    <div class="notif"><i class="fas fa-bell"></i> <span class="counter">3</span></div>
+                </li>
+                <li class="user-menu-list-item">
+                    <label class="user">
+                        <div class="profile-pic image-control vertical">
+                            {% if request.user.image %}
+                            {% else %}
+                                {{ request.user.get_initials|upper }}
+                            {% endif %}
+
+                        </div>
+                        <span class="user-name">{{ request.user.get_full_name }}</span>
+                        <input type="checkbox" name="user-dropdown" id="user-dropdown"/>
+                        <div class="user-dropdown">
+                            <ul>
+                                <li>Edit Your Profile</li>
+                                <li>Log Out</li>
+                            </ul>
+                        </div>
+                    </label>
+                </li>
+            </ul>
+        </nav>
+    </header>
+{% endif %}

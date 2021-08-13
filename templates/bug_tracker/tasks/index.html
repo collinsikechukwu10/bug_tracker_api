@@ -1,0 +1,192 @@
+{% extends "__layout/base.html" %}
+{% load static %}
+
+{% block main_content %}
+
+    <main>
+        <section class="project">
+            <input type="hidden" id="projectIdNumber" value="{{ project_id }}">
+            <div class="project-header">
+                <div class="project-name">Ligare</div>
+                <div class="actions">
+                    <div class="btn btn-big btn-blue-outline export">
+                        <span class="pre"><i class="fal fa-file-export"></i></span>
+                        <span>Export</span>
+                    </div>
+                    <div class="btn btn-big btn-blue add-task" @click="createNewTask">
+                        <span class="pre"><i class="fal fa-plus"></i></span>
+                        <span>Add A New Task</span>
+                    </div>
+                </div>
+            </div>
+            <div class="project-body">
+                <aside class="project-menu" :class="{collapsed: collapsedMenu}">
+                    <div class="project-menu-header">
+                <span class="project-settings" v-show="!collapsedMenu">
+                  <i class="fal fa-info-circle"></i>
+                  Project Info
+                </span>
+                        <span class="collapse-menu" @click="collapsedMenu = !collapsedMenu">
+                  <i class="fas fa-chevron-double-right" v-if="collapsedMenu"></i>
+                  <i class="fas fa-chevron-double-left" v-else></i>
+                </span>
+                    </div>
+                    <div class="project-menu-body">
+                        <div class="project-menu-section" v-show="!collapsedMenu" v-for="(group, groupName) in people"
+                             :key="groupName">
+                            <div class="project-menu-section-header">
+                                <span class="title">[[groupName]]</span>
+                                <span class="edit" v-if="user.privilege == 'admin'">edit</span>
+                            </div>
+                            <div class="project-menu-section-body" v-for="person in group">
+                                <ul>
+                                    <li>
+                                        <div class="user-icon">[[(person.first_name[0])+(person.last_name[0])]]</div>
+                                        <span class="user-name">[[person.first_name + " " + person.last_name]]</span>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+
+                        <div class="project-menu-section" v-show="!collapsedMenu">
+                            <div class="project-menu-section-header">
+                                <span class="title">Tags</span>
+                                <span class="edit">edit</span>
+                            </div>
+                            <div class="project-menu-section-body">
+                                <ul class="tags">
+                                    <li>
+                                        <span class="tag">sfg</span>
+                                        <span class="couner">0/1</span>
+                                    </li>
+                                    <li>
+                                        <span class="tag">sfg</span>
+                                        <span class="couner">0/1</span>
+                                    </li>
+                                    <li>
+                                        <span class="tag">sfg</span>
+                                        <span class="couner">0/1</span>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+
+                        <div class="project-menu-section-collapsed" v-show="collapsedMenu">
+                            <div class="icons"><i class="far fa-users"></i></div>
+                            <div class="icons"><i class="far fa-tags"></i></div>
+                        </div>
+                    </div>
+                </aside>
+                <div class="project-details">
+                    <div class="project-details-header">
+                        <nav>
+                            <ul>
+                                <!-- <li class="active"><i class="far fa-comment-dots"></i>Feedback</li> -->
+                                <li class="active"><i class="far fa-tasks-alt"></i>Task Board</li>
+                                <li><i class="far fa-archive"></i>Archive</li>
+                            </ul>
+                        </nav>
+                        <div class="filters">
+                            <div class="search">
+                                <div class="input-group">
+                                    <i class="fas fa-search"></i>
+                                    <div class="search-field">
+                                        <div class="search-group">
+                                            <i class="fas fa-times-circle"></i>
+                                            <span class="search-group-name"> ASSIGNED: </span>
+                                            <div class="search-dropdown">
+                                                <ul>
+                                                    <li>Tommy O' Peters</li>
+                                                    <li>Ikechuckwu Collins</li>
+                                                    <li>Gbemileke Ogunbanwo</li>
+                                                </ul>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <i class="fas fa-times-circle"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="project-details-body">
+                        <div class="project-details-columns">
+                            <div class="project-column" v-for="column in columns" :name="column.name"
+                                 :id="column.name + '_column'" :key="column.id">
+                                <div class="project-column-header">
+                                    <div class="project-column-info">
+                                        <span class="project-column-name">[[column.name.replace(/_/g, " ")]]</span>
+                                        <div class="project-column-counter">[[column.tasks.length]]</div>
+                                    </div>
+                                    <div class="project-column-actions">
+                                        <svg
+                                                xmlns="http://www.w3.org/2000/svg"
+                                                width="24"
+                                                height="24"
+                                                viewBox="0 0 24 24"
+                                                fill="none"
+                                                stroke="currentColor"
+                                                stroke-width="2"
+                                                stroke-linecap="round"
+                                                stroke-linejoin="round"
+                                                class="ant-dropdown-trigger czyrVUpoYC79N0H-EOHXQ"
+                                        >
+                                            <circle cx="12" cy="12" r="1"></circle>
+                                            <circle cx="19" cy="12" r="1"></circle>
+                                            <circle cx="5" cy="12" r="1"></circle>
+                                        </svg>
+                                    </div>
+                                </div>
+                                <div class="project-column-body">
+                                    <div class="project-items">
+                                        <div
+                                                class="project-item"
+                                                v-for="task in column.tasks"
+                                                :id="'task_'+task.id"
+                                                :column="task.column"
+                                                @mouseup="setTaskCurrent(task)"
+                                                @mousedown="click = true"
+                                        >
+                                            <div class="project-item-banner" :class="task.severity"></div>
+                                            <div class="project-item-details">
+                                                <div class="project-item-details-header">
+                                                    <span class="number">#[[task.id]]</span>
+{#                                                    [[task.created_on.toLocaleDateString('en-GB')]]#}
+
+                                                    <span class="date">[[new Date(task.created_on).toLocaleDateString('en-GB')]]</span>
+                                                </div>
+                                                <div class="project-item-details-body">[[task.title]]</div>
+                                                <div class="project-item-details-tags">
+                                                    <i class="far fa-tag"></i>
+                                                    <span class="tags">vfx, dse, dsf</span>
+                                                    <div class="reporter">
+                                                        <div class="reporter-inner">TO</div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="project-column add-column">
+                                <div class="project-column-header">
+                                    <!-- <i class="far fa-plus-circle"></i> -->
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+    {% include "bug_tracker/tasks/modal/index.html" %}
+{% endblock %}
+
+{% block extra_scripts %}
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.21.1/axios.min.js"
+            integrity="sha512-bZS47S7sPOxkjU/4Bt0zrhEtWx0y0CRkhEp8IckzK+ltifIIE9EMIMTuT/mEzoIMewUINruDBIR/jJnbguonqQ=="
+            crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="{% static 'js/vue-components/vue-select.js' %}"></script>
+    <script src="{% static 'js/vue-components/vue-editable.js' %}"></script>
+    <script src="{% static 'js/vue.js' %}"></script>
+{% endblock %}

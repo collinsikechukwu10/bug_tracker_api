@@ -1,9 +1,10 @@
 from typing import Type
 
-from rest_framework.serializers import ModelSerializer, SerializerMethodField,HyperlinkedRelatedField, HyperlinkedModelSerializer
+from rest_framework.serializers import ModelSerializer, SerializerMethodField, HyperlinkedRelatedField
 from taggit.serializers import (TagListSerializerField, TaggitSerializer)
 from bugTracker.models.project import Project
 from bugTracker.models.task import Task, TaskTrail
+from core.models import UserSerializer
 
 
 def register_serializer(model_class):
@@ -53,6 +54,10 @@ class ProjectSerializer(ModelSerializer):
 class TaskSerializer(TaggitSerializer, ModelSerializer):
     tags = TagListSerializerField()
     checklists = SerializerMethodField()
+    by = SerializerMethodField()
+
+    def get_by(self, obj):
+        return obj.reporter.get_full_name()
 
     def get_checklists(self, obj):
         return obj.decode_checklists()

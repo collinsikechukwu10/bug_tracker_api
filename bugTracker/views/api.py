@@ -4,7 +4,7 @@ from rest_framework.response import Response
 from rest_framework.decorators import api_view
 from rest_framework import status as status_util
 import datetime as dt
-
+from bugTracker.enums import Roles, TaskType, TaskStatus, SeverityLevel, UserPlatform, PriorityLevel, Status
 ##########################
 # API VIEW HANDLERS      #
 ##########################
@@ -27,6 +27,22 @@ def get_dates_dict_from_request(request: Request, params):
                 params[optional_date] = parsed_
             except:
                 continue
+
+
+@api_view(["GET"])
+def data_enum_list(request: Request):
+    data_list = {}
+    for i in [Roles, TaskType, TaskStatus, SeverityLevel, UserPlatform, PriorityLevel, Status]:
+        data_list[i.__name__] = i.values()
+    return Response(data=BaseResponse.get_success_response(None, data_list), status=status_util.HTTP_200_OK)
+
+
+@api_view(["GET"])
+def project_detail(request: Request, pk: int):
+    tasks = TaskService.get_instance().get_project_tasks(pk)
+    members = ProjectService.get_instance().get_project_members(pk)
+    response_data = dict(tasks=tasks, members=members)
+    return Response(data=BaseResponse.get_success_response(None, response_data), status=status_util.HTTP_200_OK)
 
 
 @api_view(["GET"])
@@ -64,11 +80,11 @@ def export_project(request, pk: int):
     return response
 
 
-@api_view(["GET"])
-def project_detail(request: Request, pk: int):
-    project = ProjectService.get_instance().get_project(project_id=pk)
-    project = project if project is not None else dict()
-    return Response(project, status_util.HTTP_200_OK)
+# @api_view(["GET"])
+# def project_detail(request: Request, pk: int):
+#     project = ProjectService.get_instance().get_project(project_id=pk)
+#     project = project if project is not None else dict()
+#     return Response(project, status_util.HTTP_200_OK)
 
 
 @api_view(["POST"])

@@ -2,6 +2,11 @@ from enum import Enum
 
 
 class DjangoDbChoicesEnum(Enum):
+
+    @classmethod
+    def class_name(cls):
+        return cls.__class__.__name__
+
     @classmethod
     def choices(cls):
         return [(enum_.name, enum_.value) for enum_ in cls.__members__.values()]
@@ -21,8 +26,8 @@ class Roles(DjangoDbChoicesEnum):
 
 
 class TaskStatus(str, DjangoDbChoicesEnum):
-    OPEN = "opened"
-    IN_PROGRESS = "progress"
+    OPEN = "open"
+    IN_PROGRESS = "in_progress"
     TESTING = "testing"
     DONE = "done"
 
@@ -36,7 +41,7 @@ class TaskType(str, DjangoDbChoicesEnum):
 
 class SeverityLevel(str, DjangoDbChoicesEnum):
     CRITICAL = "critical"
-    MAJOR = 'major'
+    IMPORTANT = 'important'
     MINOR = 'minor'
     NORMAL = 'normal'
 
@@ -59,23 +64,3 @@ class Status(str, DjangoDbChoicesEnum):
     FIXED = "fixed"
     STARTED = "started"
     UNDER_REVIEW = "reviewing"
-
-
-class PreDefinedTeams(str, DjangoDbChoicesEnum):
-    AITEAM = "ai-team"
-    DEVELOPERS = "developers"
-    LEGAL = "legal-team"
-    FUNDS = "funds-team"
-    QATEAM = "qa-team"
-    LOIS = "lois"
-    DAMILOLA = 'damilola'
-    NONE_TYPE = None
-
-
-class PreDefinedCompanies(str, DjangoDbChoicesEnum):
-    WEALTHTECH = "wealth-tech"
-    SANKORE = "sankore"
-
-
-class Reporter(str, DjangoDbChoicesEnum):
-    DEFAULT = "default-reporter"

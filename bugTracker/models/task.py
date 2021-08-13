@@ -1,5 +1,5 @@
 import json
-from typing import List
+from typing import List, Dict, Any
 
 from django.db import models
 from django.conf import settings
@@ -16,7 +16,9 @@ from ..utilities import send_notification_email
 
 User = get_user_model()
 
-STEPS_APPENDER = "%%AND%%"
+STEPS_APPENDER = "%%NEWSET%%"
+ID_TEXT_SPLIT = "%%AND%%"
+checklist_formatter = lambda key, text: f"{key}{ID_TEXT_SPLIT}{text}{STEPS_APPENDER}"
 
 
 class Task(models.Model):
@@ -44,12 +46,19 @@ class Task(models.Model):
             return self.due_date <= dt.date.today()
         return False
 
-    def encode_checklists(self, steps: List[str]):
-        steps_string = STEPS_APPENDER.join(map(str.strip, steps))
-        self.checklists = steps_string
+    def encode_checklists(self, steps: List[Dict[str, Any]]):
+        # this list has to be ordered
+        return "".join(map(checklist_formatter, steps))
 
     def decode_checklists(self):
-        return self.checklists.split(STEPS_APPENDER) if self.checklists else []
+        steps = self.checklists.split(STEPS_APPENDER)
+        if len(steps) == 0:
+            return []
+        decoded = []
+        for step in filter(lambda i: i.strip() != "", steps):
+            id_, text = step.split(ID_TEXT_SPLIT)
+            decoded.append(dict(id=id_, text=text))
+        return decoded
 
     @property
     def can_complete(self):

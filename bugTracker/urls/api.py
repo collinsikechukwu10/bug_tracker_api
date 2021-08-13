@@ -4,6 +4,7 @@ from bugTracker.views import api as views
 #
 _name_appender = lambda i: f"api_bugtracker{i}"
 urlpatterns = [
+    path("data-list", views.data_enum_list, name=_name_appender("datalist")),
     path("projects/<int:pk>/tasks", views.project_task_list, name=_name_appender("projecttasklist")),
     path("projects/<int:pk>/metrics", views.project_metrics, name=_name_appender("projecttaskmetrics")),
     path("task/update-status", views.update_task_status, name=_name_appender("updatetaskstatus")),

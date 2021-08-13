@@ -13,9 +13,11 @@ def initialize():
 def initialize_users():
     users = User.objects.filter(is_staff=False, is_superuser=False)
     if len(users) == 0:
-        new_user = User.objects.create_user(username="ubuntu@sankore.com", email="ubuntu@sankore.com",
-                                            password="password")
-        new_user.save()
+        membership = Membership.objects.get(name=str(DefaultMembershipEnum.UNASSIGNED.value))
+        if membership:
+            new_user = User.objects.create_user(username="ubuntu@sankore.com", email="ubuntu@sankore.com",
+                                                password="password", membership=membership)
+            new_user.save()
 
 
 def initialize_membership_roles():
